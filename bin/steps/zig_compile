@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-ZIGLANG_VERSION=$(cat build.zig | grep '// zig-release:' | cut -c 17- | tr -d " \n")
+ZIGLANG_VERSION=$(cat build.zig | grep '// zig-version:' | cut -c 17- | tr -d " \n")
+ZIGLANG_VERSION_FILE="zig-linux-x86_64-${ZIGLANG_VERSION}.tar.xz"
 IFS='-' read -r -a VERSION_ARRAY <<< ${ZIGLANG_VERSION}
 VERSION=${VERSION_ARRAY[1]}
 
 # The location of the pre-compiled zig build.
-VENDORED_ZIGLANG="${ZIGLANG_URL}/download/${ZIGLANG_VERSION}"
+VENDORED_ZIGLANG="${ZIGLANG_URL}/download/${ZIGLANG_VERSION}/${ZIGLANG_VERSION_FILE}"
 
 # Remove old file if needed
 if [ -f /app/.heroku/ziglang/buildpack-version.txt ]; then
@@ -27,9 +28,9 @@ if [ ! -d /app/.heroku/ziglang ]; then
         exit 1
     fi
     mkdir -p /app/.heroku/ziglang/
-    tar -xf ${ZIGLANG_VERSION} --directory /app/.heroku/ziglang/ --strip-components=1 | indent
-    rm -fr ${ZIGLANG_VERSION}
-    echo ${ZIGLANG_VERSION} > /app/.heroku/ziglang/buildpack-version.txt
+    tar -xf ${ZIGLANG_VERSION_FILE} --directory /app/.heroku/ziglang/ --strip-components=1 | indent
+    rm -fr ${ZIGLANG_VERSION_FILE}
+    echo ${ZIGLANG_VERSION_FILE} > /app/.heroku/ziglang/buildpack-version.txt
 fi
 
 if [ -f prebuild.zig ]; then
