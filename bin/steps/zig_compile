@@ -6,7 +6,7 @@ IFS='-' read -r -a VERSION_ARRAY <<< ${ZIGLANG_VERSION}
 VERSION=${VERSION_ARRAY[1]}
 
 # The location of the pre-compiled zig build.
-VENDORED_ZIGLANG="${ZIGLANG_URL}/builds/${ZIGLANG_VERSION}"
+VENDORED_ZIGLANG="${ZIGLANG_URL}/download/${ZIGLANG_VERSION}"
 
 # Remove old file if needed
 if [ -f /app/.heroku/ziglang/buildpack-version.txt ]; then
